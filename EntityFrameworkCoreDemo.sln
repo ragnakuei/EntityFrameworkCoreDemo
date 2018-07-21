@@ -1,0 +1,38 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 15
+VisualStudioVersion = 15.0.27703.2035
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EntityFrameworkCoreDemo", "EntityFrameworkCoreDemo\EntityFrameworkCoreDemo.csproj", "{F1353025-E732-4770-AB05-4BC2CDDF7BE8}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{49549983-36DC-47C9-A8C4-DF02E4A9779D}"
+	ProjectSection(SolutionItems) = preProject
+		readme.md = readme.md
+	EndProjectSection
+EndProject
+Project("{00D1A9C2-B5F0-4AF3-8072-F6C62B433612}") = "DB", "DB\DB.sqlproj", "{0737CA17-32CA-42D5-9285-A85A5D0F40BB}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F1353025-E732-4770-AB05-4BC2CDDF7BE8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F1353025-E732-4770-AB05-4BC2CDDF7BE8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F1353025-E732-4770-AB05-4BC2CDDF7BE8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F1353025-E732-4770-AB05-4BC2CDDF7BE8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0737CA17-32CA-42D5-9285-A85A5D0F40BB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0737CA17-32CA-42D5-9285-A85A5D0F40BB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0737CA17-32CA-42D5-9285-A85A5D0F40BB}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{0737CA17-32CA-42D5-9285-A85A5D0F40BB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0737CA17-32CA-42D5-9285-A85A5D0F40BB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0737CA17-32CA-42D5-9285-A85A5D0F40BB}.Release|Any CPU.Deploy.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {FF34E3E4-E5FD-4EF4-9B9F-C8837E46601C}
+	EndGlobalSection
+EndGlobal
