@@ -26,6 +26,7 @@ namespace EntityFrameworkCoreDemo.DAL
             // 使用 Left Join
             return _dbContext.Country
                              .Include(c => c.CountryLanguages)
+                             // .ThenInclude()
                              .AsNoTracking();
         }
 
