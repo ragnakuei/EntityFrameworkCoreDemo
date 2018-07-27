@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [dbo].[CountyLanguage](
 	[CountyLanguageId] [uniqueidentifier] NOT NULL,
-	[Language] [varchar](50) NULL,
-	[Name] [nvarchar](50) NULL,
-	[CountyId] [uniqueidentifier] NULL,
+	[Language] [varchar](50) NOT NULL,
+	[Name] [nvarchar](50) NOT NULL,
+	[CountyId] [uniqueidentifier] NOT NULL,
  CONSTRAINT [PK_CountyLanguage] PRIMARY KEY CLUSTERED 
 (
 	[CountyLanguageId] ASC

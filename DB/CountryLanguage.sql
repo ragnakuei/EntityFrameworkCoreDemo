@@ -1,8 +1,8 @@
 ﻿CREATE TABLE [dbo].[CountryLanguage](
 	[CountryLanguageId] [uniqueidentifier] NOT NULL,
-	[Language] [varchar](50) NULL,
-	[Name] [nvarchar](50) NULL,
-	[CountryId] [uniqueidentifier] NULL,
+	[Language] [varchar](50) NOT NULL,
+	[Name] [nvarchar](50) NOT NULL,
+	[CountryId] [uniqueidentifier] NOT NULL,
  CONSTRAINT [PK_CountryLanguage] PRIMARY KEY CLUSTERED 
 (
 	[CountryLanguageId] ASC

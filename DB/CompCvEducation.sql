@@ -1,12 +1,7 @@
 ﻿CREATE TABLE [dbo].[CompCvEducation](
 	[EducationId] [uniqueidentifier] NOT NULL,
 	[CvId] [uniqueidentifier] NOT NULL,
-	[AcademicDegree] [tinyint] NOT NULL,
 	[AcademyName] [nvarchar](50) NOT NULL,
-	[AcademicDeptCategory] [tinyint] NOT NULL,
-	[AcademicDeptName] [nvarchar](50) NOT NULL,
-	[AttendanceSatrt] [datetime2](7) NULL,
-	[AttendanceEnd] [datetime2](7) NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[EducationId] ASC

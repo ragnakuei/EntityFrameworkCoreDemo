@@ -1,14 +1,11 @@
 ﻿CREATE TABLE [dbo].[CompCvLanguageRequirement](
-	[LanguageRequirement] [uniqueidentifier] NOT NULL,
+	[LanguageRequirementId] [uniqueidentifier] NOT NULL,
 	[CvId] [uniqueidentifier] NOT NULL,
 	[Language] [tinyint] NOT NULL,
 	[Listening] [tinyint] NOT NULL,
-	[Reading] [tinyint] NOT NULL,
-	[Speaking] [tinyint] NOT NULL,
-	[Writing] [tinyint] NOT NULL,
 PRIMARY KEY CLUSTERED 
 (
-	[LanguageRequirement] ASC
+	[LanguageRequirementId] ASC
 )WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
 ) ON [PRIMARY]
 GO

@@ -2,9 +2,6 @@
 	[CertificateId] [uniqueidentifier] NOT NULL,
 	[CvId] [uniqueidentifier] NOT NULL,
 	[CertificateName] [nvarchar](50) NOT NULL,
-	[CertificateIssuingUnit] [nvarchar](50) NOT NULL,
-	[CertificateIssuingDate] [datetime2](7) NULL,
-	[Notes] [nvarchar](50) NULL,
 PRIMARY KEY CLUSTERED 
 (
 	[CertificateId] ASC
