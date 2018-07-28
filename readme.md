@@ -7,8 +7,7 @@
  ### 安裝套件
 * Install-Package Microsoft.EntityFrameworkCore
 * Install-Package Microsoft.EntityFrameworkCore.SqlServer
-* Install-Package NLog
-* Install-Package NLog.Config
+* Install-Package NLog.Web.AspNetCore
 
 ##  目的
 * include 一對多關聯資料表時，是否會有 join ?
@@ -17,6 +16,12 @@
     * insert 會 - CountryDAL.Add()
     * insert 不會 - CvDAL.Add()
     * update 不會 - CountryDAL.Update()
+
+## Note
+* EF Core 新增 ThenInclude()
+* EF Core 沒有 AddOrUpdate()
+* EF Core 新增 Update()
+
 ## Demo
 
 

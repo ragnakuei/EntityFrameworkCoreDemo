@@ -1,27 +1,34 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
-using EntityFrameworkCoreDemo.BLL.IBLL;
-using EntityFrameworkCoreDemo.DAL.IDAL;
+using EntityFrameworkCoreDemo.IBLL;
+using EntityFrameworkCoreDemo.IDAL;
+using EntityFrameworkCoreDemo.Log;
 using EntityFrameworkCoreDemo.Models.EntityModel;
 using EntityFrameworkCoreDemo.Models.ViewModel;
+using EntityFrameworkCoreDemo.Models.Shared;
 
 namespace EntityFrameworkCoreDemo.BLL
 {
     public class CountryBLL : ICountryBLL
     {
-        private readonly ICountryDAL _dal;
-        private readonly string _currentLanguage;
+        private readonly ICountryDAL _countryDal;
+        private readonly LogAdapter  _logger;
+        private readonly UserInfo    _userInfo;
 
-        public CountryBLL(ICountryDAL dal)
+        public CountryBLL(ICountryDAL countryDal,
+                          LogAdapter  logger,
+                          UserInfo    userInfo)
         {
-            _dal = dal;
-            _currentLanguage = Thread.CurrentThread.CurrentUICulture.ToString();
+            _countryDal = countryDal;
+            _logger     = logger;
+            _userInfo   = userInfo;
+            _logger.Initial(this.GetType().Name);
         }
 
         public List<CountryVM> Get()
         {
-            var vms = _dal.Get()
+            var vms = _countryDal.Get()
                           .Select(c => ToCountryVM(c))
                           .ToList();
             return vms;
@@ -34,8 +41,8 @@ namespace EntityFrameworkCoreDemo.BLL
             result.Code = entity.Code;
 
             var countryLanguage = entity.CountryLanguages
-                                        .FirstOrDefault(cl => cl.Language == _currentLanguage);
-            result.Language = _currentLanguage;
+                                        .FirstOrDefault(cl=> cl.Language == _userInfo.CurrentLanguage);
+            result.Language = _userInfo.CurrentLanguage;
             if (countryLanguage != null)
             {
                 result.LanguageId = countryLanguage.CountryLanguageId;
@@ -43,6 +50,64 @@ namespace EntityFrameworkCoreDemo.BLL
             }
 
             return result;
+        }
+
+        public CountryVM Get(Guid id)
+        {
+            var entity = _countryDal.Get(id);
+            var result = ToCountryVM(entity);
+            return result;
+        }
+
+        public bool Add(CountryVM countryVm)
+        {
+            var entity = new Country();
+            entity = ToCountryInsertEntity(countryVm);
+            return _countryDal.Add(entity);
+        }
+
+        private Country ToCountryInsertEntity(CountryVM countryVm)
+        {
+            Country entity;
+            entity = new Country
+                     {
+                         CountryId = Guid.NewGuid(),
+                         Code      = countryVm.Code
+                     };
+            entity.CountryLanguages = new List<CountryLanguage>
+                                      {
+                                          new CountryLanguage
+                                          {
+                                              CountryLanguageId = Guid.NewGuid(),
+                                              Language          = _userInfo.CurrentLanguage,
+                                              Name              = countryVm.Name,
+                                              //CountryId         = entity.CountryId   // 可以不用預先給定
+                                          }
+                                      };
+            return entity;
+        }
+
+        public bool Update(CountryVM countryVm)
+        {
+            var result = new Country
+                         {
+                             CountryId        = countryVm.Id,
+                             Code             = countryVm.Code,
+                             CountryLanguages = new List<CountryLanguage>()
+                         };
+
+            var item = new CountryLanguage();
+            item.CountryId = countryVm.Id;
+            item.Name = countryVm.Name;
+            item.Language = countryVm.Language ?? _userInfo.CurrentLanguage;
+            item.CountryLanguageId = countryVm.LanguageId ?? Guid.NewGuid();
+            result.CountryLanguages.Add(item);
+            return _countryDal.Update(result);
+        }
+
+        public bool Del(Guid id)
+        {
+            return _countryDal.Delete(id);
         }
     }
 }

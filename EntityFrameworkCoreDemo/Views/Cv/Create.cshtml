@@ -1,0 +1,126 @@
+﻿@using Microsoft.AspNetCore.Html
+@model EntityFrameworkCoreDemo.Models.ViewModel.CompCvVM
+
+@{
+    ViewBag.Title = "Create";
+}
+
+<h2>Create</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+<div class="form-horizontal">
+    <h4>CompCvVM</h4>
+    <hr />
+    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+    @Html.HiddenFor(model => model.CvId)
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.FirstName, new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.FirstName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.FirstName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.LastName, new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.EditorFor(model => model.LastName, new { htmlAttributes = new { @class = "form-control" } })
+            @Html.ValidationMessageFor(model => model.LastName, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CountryId, new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.CountryId, null, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.CountryId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(model => model.CountyId, new { @class = "control-label col-md-2" })
+        <div class="col-md-10">
+            @Html.DropDownListFor(model => model.CountyId, null, new { @class = "form-control" })
+            @Html.ValidationMessageFor(model => model.CountyId, "", new { @class = "text-danger" })
+        </div>
+    </div>
+
+    @for (var i = 0; i < Model.Educations.Count; i++)
+    {
+        <div class="form-group">
+            @Html.Label(nameof(Model.Educations) + i,null , new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input name="@($"Educations[{i}].AcademyName")" class="form-control" />
+            </div>
+        </div>
+    }
+
+    @for (var i = 0; i < Model.Certificates.Count; i++)
+    {
+        <div class="form-group">
+            @Html.Label(nameof(Model.Certificates) + i,null, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <input name="@($"Certificates[{i}].CertificateName")" class="form-control"/>
+            </div>
+        </div>
+    }
+
+    @for (var i = 0; i < Model.LanguageRequirements.Count; i++)
+    {
+        @CustomHiddenId($"LanguageRequirements[{i}].LanguageRequirementId")
+        <div class="form-group">
+            @Html.LabelFor(model => model.LanguageRequirements.FirstOrDefault().Language, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @CustomDropDownList($"LanguageRequirements[{i}].Language", ViewBag.Language as IEnumerable<SelectListItem>)
+            </div>
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.LanguageRequirements.FirstOrDefault().Listening, new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                @CustomDropDownList($"LanguageRequirements[{i}].Listening", ViewBag.Listening as IEnumerable<SelectListItem>)
+            </div>
+        </div>
+    }
+
+    <div class="form-group">
+        <div class="col-md-offset-2 col-md-10">
+            <input type="submit" value="Create" class="btn btn-default" />
+        </div>
+    </div>
+</div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+@functions
+{
+    public IHtmlContent CustomHiddenId(string name)
+    {
+        var inputBuilder = new TagBuilder("input");
+        inputBuilder.Attributes.Add("type", "hidden");
+        inputBuilder.Attributes.Add("name", name);
+        return inputBuilder;
+    }
+
+    public IHtmlContent CustomDropDownList(string name, IEnumerable<SelectListItem> options)
+    {
+        var selectBuilder = new TagBuilder("select");
+        selectBuilder.Attributes.Add("name", name);
+
+        foreach (var option in options)
+        {
+            var optionsBuilder = new TagBuilder("option");
+            optionsBuilder.MergeAttribute("value", option.Value);
+            optionsBuilder.InnerHtml.Append(option.Text);
+            selectBuilder.InnerHtml.AppendHtml(optionsBuilder);
+        }
+
+        return selectBuilder;
+    }
+}

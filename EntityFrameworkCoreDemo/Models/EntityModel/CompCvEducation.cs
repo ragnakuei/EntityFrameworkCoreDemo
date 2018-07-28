@@ -8,16 +8,12 @@ namespace EntityFrameworkCoreDemo.Models.EntityModel
     public class CompCvEducation
     {
         [Key]
-        public Guid EducationId { get;    set; }
-        public Guid CvId           { get; set; }
-        public byte AcademicDegree { get; set; }
+        public Guid EducationId { get; set; }
+
+        public Guid CvId { get; set; }
+
         [MaxLength(50)]
-        public string AcademyName { get;        set; }
-        public byte AcademicDeptCategory { get; set; }
-        [MaxLength(50)]
-        public string AcademicDeptName { get;   set; }
-        public DateTime? AttendanceSatrt { get; set; }
-        public DateTime? AttendanceEnd   { get; set; }
+        public string AcademyName { get; set; }
 
         [ForeignKey("CvId")]
         public CompCv CompCv { get; set; }

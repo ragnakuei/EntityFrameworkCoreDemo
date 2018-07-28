@@ -1,5 +1,4 @@
-﻿@using EntityFrameworkCoreDemo.Models.ViewModel
-@model IEnumerable<CountryVM>
+﻿@model IEnumerable<EntityFrameworkCoreDemo.Models.ViewModel.CountyVM>
 
 @{
     ViewBag.Title = "Index";
@@ -16,10 +15,10 @@
             @Html.DisplayNameFor(model => model.Language)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Name)
+            @Html.DisplayNameFor(model => model.CountryName)
         </th>
         <th>
-            @Html.DisplayNameFor(model => model.Code)
+            @Html.DisplayNameFor(model => model.Name)
         </th>
         <th></th>
     </tr>
@@ -30,10 +29,10 @@
             @Html.DisplayFor(modelItem => item.Language)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Name)
+            @Html.DisplayFor(modelItem => item.CountryName)
         </td>
         <td>
-            @Html.DisplayFor(modelItem => item.Code)
+            @Html.DisplayFor(modelItem => item.Name)
         </td>
         <td>
             @Html.ActionLink("Edit", "Edit", new { id=item.Id }) |

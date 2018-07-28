@@ -9,11 +9,14 @@ namespace EntityFrameworkCoreDemo.Models.EntityModel
     {
         [Key]
         public Guid CountryLanguageId { get; set; }
+
         [MaxLength(50)]
         public string Language { get; set; }
+
         [MaxLength(50)]
-        public string Name { get;     set; }
-        public Guid? CountryId { get; set; }
+        public string Name { get; set; }
+
+        public Guid CountryId { get; set; }
 
         [ForeignKey("CountryId")]
         public Country Country { get; set; }
