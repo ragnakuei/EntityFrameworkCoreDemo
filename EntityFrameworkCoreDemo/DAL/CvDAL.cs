@@ -28,6 +28,10 @@ namespace EntityFrameworkCoreDemo.DAL
         public IEnumerable<CompCv> Get()
         {
             return _dbContext.CompCv
+                             .FromSql(@"
+select *
+from CompCv
+")
                              .Include(cv => cv.CompCvCertificates)
                              .Include(cv => cv.CompCvEducations)
                              .Include(cv => cv.CompCvLanguageRequirements)
@@ -45,9 +49,9 @@ namespace EntityFrameworkCoreDemo.DAL
                              .Include(cv => cv.CompCvEducations)
                              .Include(cv => cv.CompCvLanguageRequirements)
                              .Include(cv => cv.Country)
-                             .Include(cv => cv.Country.CountryLanguages)
+                             .ThenInclude(c => c.CountryLanguages)
                              .Include(cv => cv.County)
-                             .Include(cv => cv.County.CountyLanguages)
+                             .ThenInclude(c => c.CountyLanguages)
                              .AsNoTracking()
                              .FirstOrDefault(c => c.CvId == id);
         }
