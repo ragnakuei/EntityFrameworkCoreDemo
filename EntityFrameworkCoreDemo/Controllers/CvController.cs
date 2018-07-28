@@ -16,9 +16,7 @@ namespace EntityFrameworkCoreDemo.Controllers
         private readonly ILogger<CvController> _logger;
         private readonly UserInfo              _userInfo;
 
-        public CvController(ICvBLL                cvBLL,
-                            ILogger<CvController> logger,
-                            UserInfo              userInfo)
+        public CvController(ICvBLL cvBLL, ILogger<CvController> logger, UserInfo userInfo)
         {
             _userInfo = userInfo;
             _cvBLL    = cvBLL;
@@ -90,9 +88,6 @@ namespace EntityFrameworkCoreDemo.Controllers
             var compCv = _cvBLL.Get(id);
             if (compCv == null)
                 return NotFound();
-
-            compCv.Certificates.Add(new CompCvCertificateVM());
-            compCv.Educations.Add(new CompCvEducationVM());
 
             ViewBag.Language  = GetLanguageOptions();
             ViewBag.Listening = GetLanguageRequirementOptions();
