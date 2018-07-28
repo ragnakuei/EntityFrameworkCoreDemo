@@ -60,14 +60,11 @@ namespace EntityFrameworkCoreDemo.DAL
             if (updateEntity == null)
                 throw new Exception("Country 無對應資料可更新");
 
-            var countryInDB = _dbContext.Country
-                                        .First(c => c.CountryId == updateEntity.CountryId);
-            if (countryInDB == null)
-                throw new Exception("Country 無對應資料可更新");
+            _dbContext.Country.Attach(updateEntity);
 
-            _dbContext.Country.Update(updateEntity);
-
-            _dbContext.CountryLanguage.Update(updateEntity.CountryLanguages.First());
+            _dbContext.CountryLanguage.AttachRange(updateEntity.CountryLanguages);
+            foreach (var countryLanguage in updateEntity.CountryLanguages)
+                _dbContext.Entry(countryLanguage).Property(c => c.Name).IsModified = true;
 
             // 同時更新二個 Table，會自動加上 transaction
             return _dbContext.SaveChanges() > 0;

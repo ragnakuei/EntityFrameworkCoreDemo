@@ -67,16 +67,9 @@ namespace EntityFrameworkCoreDemo.DAL
             if (updateEntity == null)
                 throw new Exception("County 無對應資料可更新");
 
-            var countyInDB = _dbContext.County
-                                       .First(c => c.CountyId == updateEntity.CountyId);
-            if (countyInDB == null)
-                throw new Exception("County 無對應資料可更新");
+            _dbContext.County.Update(updateEntity);
 
-            _dbContext.County
-                      .Update(updateEntity);
-
-            _dbContext.CountyLanguage
-                      .Update(updateEntity.CountyLanguages.First());
+            _dbContext.CountyLanguage.UpdateRange(updateEntity.CountyLanguages);
 
             // 同時更新二個 Table，會自動加上 transaction
             return _dbContext.SaveChanges() > 0;
