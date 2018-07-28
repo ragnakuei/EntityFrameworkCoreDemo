@@ -23,6 +23,3 @@
 * EF Core 新增 Update()
 
 ## Demo
-
-## TODO
-* 加入 Log
