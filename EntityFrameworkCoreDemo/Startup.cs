@@ -38,7 +38,9 @@ namespace EntityFrameworkCoreDemo
 
             services.AddDbContext<DemoDbContext>(options => options
                                                             .UseSqlServer(Configuration.GetConnectionString("DemoDb"))
-                                                            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
+                                                            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking),
+                                                             ServiceLifetime.Scoped,
+                                                             ServiceLifetime.Scoped);
             services.AddTransient<HomeController>();
             services.AddTransient<CountryController>();
             services.AddTransient<CountyController>();

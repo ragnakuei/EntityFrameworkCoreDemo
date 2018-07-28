@@ -61,6 +61,7 @@ namespace EntityFrameworkCoreDemo.DAL
                 throw new Exception("Country 無對應資料可更新");
 
             _dbContext.Country.Attach(updateEntity);
+            _dbContext.Entry(updateEntity).Property(c => c.Code).IsModified = true;
 
             _dbContext.CountryLanguage.AttachRange(updateEntity.CountryLanguages);
             foreach (var countryLanguage in updateEntity.CountryLanguages)
