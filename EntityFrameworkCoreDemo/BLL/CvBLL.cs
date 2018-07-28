@@ -3,34 +3,33 @@ using System.Collections.Generic;
 using System.Linq;
 using EntityFrameworkCoreDemo.IBLL;
 using EntityFrameworkCoreDemo.IDAL;
-using EntityFrameworkCoreDemo.Log;
 using EntityFrameworkCoreDemo.Models.EntityModel;
 using EntityFrameworkCoreDemo.Models.Shared;
 using EntityFrameworkCoreDemo.Models.ViewModel;
+using Microsoft.Extensions.Logging;
 
 namespace EntityFrameworkCoreDemo.BLL
 {
     public class CvBLL : ICvBLL
     {
-        private readonly ICvDAL     _cvDal;
-        private readonly LogAdapter _logger;
-        private readonly UserInfo   _userInfo;
+        private readonly ICvDAL         _cvDal;
+        private readonly ILogger<CvBLL> _logger;
+        private readonly UserInfo       _userInfo;
 
-        public CvBLL(ICvDAL     cvDal,
-                     LogAdapter logger,
-                     UserInfo   userInfo)
+        public CvBLL(ICvDAL         cvDal,
+                     ILogger<CvBLL> logger,
+                     UserInfo       userInfo)
         {
             _cvDal    = cvDal;
             _logger   = logger;
             _userInfo = userInfo;
-            _logger.Initial(GetType().Name);
         }
 
         public List<CompCvVM> Get()
         {
             var entities = _cvDal.Get();
             var vm = entities.Select(c => ToCompCvVM(c))
-                           .ToList();
+                             .ToList();
             return vm;
         }
 
@@ -75,8 +74,8 @@ namespace EntityFrameworkCoreDemo.BLL
         {
             return new CompCvCertificateVM
                    {
-                       CertificateId          = dto.CertificateId,
-                       CertificateName        = dto.CertificateName,
+                       CertificateId   = dto.CertificateId,
+                       CertificateName = dto.CertificateName,
                    };
         }
 
@@ -84,8 +83,8 @@ namespace EntityFrameworkCoreDemo.BLL
         {
             return new CompCvEducationVM
                    {
-                       EducationId          = dto.EducationId,
-                       AcademyName          = dto.AcademyName,
+                       EducationId = dto.EducationId,
+                       AcademyName = dto.AcademyName,
                    };
         }
 
@@ -94,8 +93,8 @@ namespace EntityFrameworkCoreDemo.BLL
             return new CompCvLanguageRequirementVM
                    {
                        LanguageRequirementId = dto.LanguageRequirementId,
-                       Language            = dto.Language,
-                       Listening           = dto.Listening,
+                       Language              = dto.Language,
+                       Listening             = dto.Listening,
                    };
         }
 
@@ -107,7 +106,7 @@ namespace EntityFrameworkCoreDemo.BLL
 
         public bool Update(CompCvVM cvVm)
         {
-            var entity = ToCompCv(cvVm,isUpdate: true);
+            var entity = ToCompCv(cvVm, true);
             return _cvDal.Update(entity);
         }
 
@@ -123,35 +122,36 @@ namespace EntityFrameworkCoreDemo.BLL
                           ? vm.CvId
                           : Guid.NewGuid();
             cv.FirstName = vm.FirstName;
-            cv.LastName = vm.LastName;
+            cv.LastName  = vm.LastName;
             cv.CountryId = vm.CountryId;
-            cv.CountyId = vm.CountyId;
+            cv.CountyId  = vm.CountyId;
             cv.CompCvCertificates = vm.Certificates
-                                      .Where(c=>string.IsNullOrWhiteSpace(c.CertificateName) == false)
+                                      .Where(c => string.IsNullOrWhiteSpace(c.CertificateName) == false)
                                       .Select(c =>
-                                                   {
-                                                       var entity = ToCompCvCerttificate(c);
-                                                       entity.CertificateId = c.CertificateId ?? Guid.NewGuid();
-                                                       entity.CvId = cv.CvId;
-                                                       return entity;
-                                                   }).ToList();
+                                              {
+                                                  var entity = ToCompCvCerttificate(c);
+                                                  entity.CertificateId = c.CertificateId ?? Guid.NewGuid();
+                                                  entity.CvId          = cv.CvId;
+                                                  return entity;
+                                              }).ToList();
             cv.CompCvEducations = vm.Educations
                                     .Where(c => string.IsNullOrWhiteSpace(c.AcademyName) == false)
                                     .Select(c =>
-                                               {
-                                                   var entity = ToCompCvEducations(c);
-                                                   entity.EducationId = c.EducationId ?? Guid.NewGuid();
-                                                   entity.CvId = cv.CvId;
-                                                   return entity;
-                                               }).ToList();
+                                            {
+                                                var entity = ToCompCvEducations(c);
+                                                entity.EducationId = c.EducationId ?? Guid.NewGuid();
+                                                entity.CvId        = cv.CvId;
+                                                return entity;
+                                            }).ToList();
             cv.CompCvLanguageRequirements = vm.LanguageRequirements
                                               .Select(c =>
-                                                           {
-                                                               var entity = ToCompCvLanguageRequirement(c);
-                                                               entity.LanguageRequirementId = c.LanguageRequirementId ?? Guid.NewGuid();
-                                                               entity.CvId = cv.CvId;
-                                                               return entity;
-                                                           }).ToList();
+                                                      {
+                                                          var entity = ToCompCvLanguageRequirement(c);
+                                                          entity.LanguageRequirementId =
+                                                              c.LanguageRequirementId ?? Guid.NewGuid();
+                                                          entity.CvId = cv.CvId;
+                                                          return entity;
+                                                      }).ToList();
             return cv;
         }
 
@@ -172,7 +172,7 @@ namespace EntityFrameworkCoreDemo.BLL
         private CompCvLanguageRequirement ToCompCvLanguageRequirement(CompCvLanguageRequirementVM vm)
         {
             var requirement = new CompCvLanguageRequirement();
-            requirement.Language = vm.Language;
+            requirement.Language  = vm.Language;
             requirement.Listening = vm.Listening;
             return requirement;
         }

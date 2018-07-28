@@ -2,28 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using EntityFrameworkCoreDemo.IBLL;
-using EntityFrameworkCoreDemo.Log;
 using EntityFrameworkCoreDemo.Models.Shared;
 using EntityFrameworkCoreDemo.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
 
 namespace EntityFrameworkCoreDemo.Controllers
 {
     public class CountyController : Controller
     {
-        private readonly ICountyBLL _bll;
-        private readonly LogAdapter _logAdapter;
-        private readonly UserInfo   _userInfo;
+        private readonly ICountyBLL                _bll;
+        private readonly ILogger<CountyController> _logger;
+        private readonly UserInfo                  _userInfo;
 
-        public CountyController(ICountyBLL bll,
-                                LogAdapter logAdapter,
-                                UserInfo   userInfo)
+        public CountyController(ICountyBLL                bll,
+                                ILogger<CountyController> logger,
+                                UserInfo                  userInfo)
         {
-            _userInfo   = userInfo;
-            _bll        = bll;
-            _logAdapter = logAdapter;
-            _logAdapter.Initial(GetType().Name);
+            _userInfo = userInfo;
+            _bll      = bll;
+            _logger   = logger;
         }
 
         public IActionResult Index()

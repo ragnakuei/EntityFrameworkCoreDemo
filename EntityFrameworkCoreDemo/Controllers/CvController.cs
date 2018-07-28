@@ -2,28 +2,27 @@
 using System.Collections.Generic;
 using System.Linq;
 using EntityFrameworkCoreDemo.IBLL;
-using EntityFrameworkCoreDemo.Log;
-using Microsoft.AspNetCore.Mvc;
 using EntityFrameworkCoreDemo.Models.Shared;
 using EntityFrameworkCoreDemo.Models.ViewModel;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.Extensions.Logging;
 
 namespace EntityFrameworkCoreDemo.Controllers
 {
     public class CvController : Controller
     {
-        private readonly ICvBLL     _cvBLL;
-        private readonly LogAdapter _logAdapter;
-        private readonly UserInfo   _userInfo;
+        private readonly ICvBLL                _cvBLL;
+        private readonly ILogger<CvController> _logger;
+        private readonly UserInfo              _userInfo;
 
-        public CvController(ICvBLL     cvBLL,
-                            LogAdapter logAdapter,
-                            UserInfo   userInfo)
+        public CvController(ICvBLL                cvBLL,
+                            ILogger<CvController> logger,
+                            UserInfo              userInfo)
         {
-            _userInfo   = userInfo;
-            _cvBLL      = cvBLL;
-            _logAdapter = logAdapter;
-            _logAdapter.Initial(GetType().Name);
+            _userInfo = userInfo;
+            _cvBLL    = cvBLL;
+            _logger   = logger;
         }
 
         public IActionResult Index()
@@ -42,7 +41,7 @@ namespace EntityFrameworkCoreDemo.Controllers
                          Educations           = Enumerable.Repeat(new CompCvEducationVM(), 2).ToList(),
                          LanguageRequirements = Enumerable.Repeat(new CompCvLanguageRequirementVM(), 2).ToList()
                      };
-            ViewBag.Language = GetLanguageOptions();
+            ViewBag.Language  = GetLanguageOptions();
             ViewBag.Listening = GetLanguageRequirementOptions();
             ViewBag.CountryId = GetCountryOptions();
             ViewBag.CountyId  = GetCountyOptions();
@@ -59,7 +58,7 @@ namespace EntityFrameworkCoreDemo.Controllers
                 return RedirectToAction("Index");
             }
 
-            ViewBag.Language = GetLanguageOptions();
+            ViewBag.Language  = GetLanguageOptions();
             ViewBag.Listening = GetLanguageRequirementOptions();
             ViewBag.CountryId = GetCountryOptions();
             ViewBag.CountyId  = GetCountyOptions();
@@ -121,6 +120,7 @@ namespace EntityFrameworkCoreDemo.Controllers
                     ViewBag.CountyId  = GetCountyOptions();
                     return View(compCv);
                 }
+
                 return RedirectToAction("Index");
             }
 
@@ -149,7 +149,8 @@ namespace EntityFrameworkCoreDemo.Controllers
             return View(county);
         }
 
-        [HttpPost, ActionName("Delete")]
+        [HttpPost]
+        [ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public IActionResult DeleteConfirmed(Guid id)
         {
@@ -197,10 +198,10 @@ namespace EntityFrameworkCoreDemo.Controllers
         {
             return new List<SelectListItem>
                    {
-                       new SelectListItem { Text  = "不會" , Value = "0", },
-                       new SelectListItem { Text  = "略懂" , Value = "1", },
-                       new SelectListItem { Text  = "中等" , Value = "2", },
-                       new SelectListItem { Text  = "精通" , Value = "3", },
+                       new SelectListItem {Text = "不會", Value = "0",},
+                       new SelectListItem {Text = "略懂", Value = "1",},
+                       new SelectListItem {Text = "中等", Value = "2",},
+                       new SelectListItem {Text = "精通", Value = "3",},
                    };
         }
 
@@ -208,8 +209,8 @@ namespace EntityFrameworkCoreDemo.Controllers
         {
             return new List<SelectListItem>
                    {
-                       new SelectListItem { Text = "中文" , Value = "0", },
-                       new SelectListItem { Text = "英文" , Value = "1", },
+                       new SelectListItem {Text = "中文", Value = "0",},
+                       new SelectListItem {Text = "英文", Value = "1",},
                    };
         }
     }

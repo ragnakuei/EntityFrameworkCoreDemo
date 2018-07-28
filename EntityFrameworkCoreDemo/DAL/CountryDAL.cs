@@ -3,27 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using EntityFrameworkCoreDemo.EF;
 using EntityFrameworkCoreDemo.IDAL;
-using EntityFrameworkCoreDemo.Log;
 using EntityFrameworkCoreDemo.Models.EntityModel;
 using EntityFrameworkCoreDemo.Models.Shared;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace EntityFrameworkCoreDemo.DAL
 {
     public class CountryDAL : ICountryDAL, IDisposable
     {
-        private readonly DemoDbContext _dbContext;
-        private readonly LogAdapter    _logger;
-        private readonly UserInfo      _userInfo;
+        private readonly DemoDbContext       _dbContext;
+        private readonly ILogger<CountryDAL> _logger;
+        private readonly UserInfo            _userInfo;
 
-        public CountryDAL(DemoDbContext dbContext,
-                          LogAdapter    logger,
-                          UserInfo      userInfo)
+        public CountryDAL(DemoDbContext       dbContext,
+                          ILogger<CountryDAL> logger,
+                          UserInfo            userInfo)
         {
             _dbContext = dbContext;
             _logger    = logger;
             _userInfo  = userInfo;
-            _logger.Initial<CountryDAL>();
         }
 
         public IEnumerable<Country> Get()
@@ -43,7 +42,7 @@ namespace EntityFrameworkCoreDemo.DAL
                 throw new Exception("查無資料");
 
             var countryLanguage = _dbContext.CountryLanguage
-                                            .Where(l => l.CountryId == id
+                                            .Where(l => l.CountryId   == id
                                                         && l.Language == _userInfo.CurrentLanguage)
                                             .AsNoTracking();
             country.CountryLanguages = countryLanguage.ToList();
@@ -75,7 +74,7 @@ namespace EntityFrameworkCoreDemo.DAL
         }
 
         public bool Delete(Guid id)
-        {  
+        {
             var delCountry = _dbContext.Country.FirstOrDefault(c => c.CountryId == id);
 
             var delCountryLanguages = _dbContext.CountryLanguage
@@ -93,17 +92,17 @@ namespace EntityFrameworkCoreDemo.DAL
             var result = _dbContext.CountryLanguage
                                    .Where(cl => cl.Language == currentLanguage)
                                    .Include(cl => cl.Country)
-                                   .Select(cl=>new
-                                               {
-                                                   cl.CountryId,
-                                                   cl.Name
-                                               })
-                                   .AsEnumerable()
-                                   .Select(anon=>new CountryLanguage
+                                   .Select(cl => new
                                                  {
-                                                     CountryId = anon.CountryId,
-                                                     Name = anon.Name
-                                                 });
+                                                     cl.CountryId,
+                                                     cl.Name
+                                                 })
+                                   .AsEnumerable()
+                                   .Select(anon => new CountryLanguage
+                                                   {
+                                                       CountryId = anon.CountryId,
+                                                       Name      = anon.Name
+                                                   });
             return result;
         }
 

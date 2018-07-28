@@ -3,27 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using EntityFrameworkCoreDemo.EF;
 using EntityFrameworkCoreDemo.IDAL;
-using EntityFrameworkCoreDemo.Log;
 using EntityFrameworkCoreDemo.Models.EntityModel;
 using EntityFrameworkCoreDemo.Models.Shared;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace EntityFrameworkCoreDemo.DAL
 {
     public class CountyDAL : ICountyDAL, IDisposable
     {
-        private readonly DemoDbContext _dbContext;
-        private readonly LogAdapter    _logger;
-        private readonly UserInfo      _userInfo;
+        private readonly DemoDbContext      _dbContext;
+        private readonly ILogger<CountyDAL> _logger;
+        private readonly UserInfo           _userInfo;
 
-        public CountyDAL(DemoDbContext dbContext,
-                         LogAdapter    logger,
-                         UserInfo      userInfo)
+        public CountyDAL(DemoDbContext      dbContext,
+                         ILogger<CountyDAL> logger,
+                         UserInfo           userInfo)
         {
             _dbContext = dbContext;
             _logger    = logger;
             _userInfo  = userInfo;
-            _logger.Initial<CountyDAL>();
         }
 
         public IEnumerable<County> Get()

@@ -4,7 +4,6 @@ using EntityFrameworkCoreDemo.DAL;
 using EntityFrameworkCoreDemo.EF;
 using EntityFrameworkCoreDemo.IBLL;
 using EntityFrameworkCoreDemo.IDAL;
-using EntityFrameworkCoreDemo.Log;
 using EntityFrameworkCoreDemo.Models.Shared;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -13,6 +12,9 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
+using NLog.Web;
 
 namespace EntityFrameworkCoreDemo
 {
@@ -36,8 +38,7 @@ namespace EntityFrameworkCoreDemo
 
             services.AddDbContext<DemoDbContext>(options => options
                                                             .UseSqlServer(Configuration.GetConnectionString("DemoDb"))
-                                                            .UseQueryTrackingBehavior(QueryTrackingBehavior
-                                                                                          .NoTracking));
+                                                            .UseQueryTrackingBehavior(QueryTrackingBehavior.NoTracking));
             services.AddTransient<HomeController>();
             services.AddTransient<CountryController>();
             services.AddTransient<CountyController>();
@@ -51,13 +52,15 @@ namespace EntityFrameworkCoreDemo
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddTransient<UserInfo, UserInfo>();
 
-            services.AddScoped<LogAdapter, LogAdapter>();
+            services.AddSingleton<ILoggerFactory, LoggerFactory>();
+            services.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
+            services.AddLogging(builder => builder.SetMinimumLevel(LogLevel.Trace));
 
             services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
             if (env.IsDevelopment())
             {
@@ -68,6 +71,9 @@ namespace EntityFrameworkCoreDemo
                 app.UseExceptionHandler("/Home/Error");
                 app.UseHsts();
             }
+
+            loggerFactory.AddNLog();
+            env.ConfigureNLog("nlog.config");
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();

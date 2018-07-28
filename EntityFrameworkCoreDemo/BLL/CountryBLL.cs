@@ -3,34 +3,33 @@ using System.Collections.Generic;
 using System.Linq;
 using EntityFrameworkCoreDemo.IBLL;
 using EntityFrameworkCoreDemo.IDAL;
-using EntityFrameworkCoreDemo.Log;
 using EntityFrameworkCoreDemo.Models.EntityModel;
-using EntityFrameworkCoreDemo.Models.ViewModel;
 using EntityFrameworkCoreDemo.Models.Shared;
+using EntityFrameworkCoreDemo.Models.ViewModel;
+using Microsoft.Extensions.Logging;
 
 namespace EntityFrameworkCoreDemo.BLL
 {
     public class CountryBLL : ICountryBLL
     {
-        private readonly ICountryDAL _countryDal;
-        private readonly LogAdapter  _logger;
-        private readonly UserInfo    _userInfo;
+        private readonly ICountryDAL         _countryDal;
+        private readonly UserInfo            _userInfo;
+        private readonly ILogger<CountryBLL> _logger;
 
-        public CountryBLL(ICountryDAL countryDal,
-                          LogAdapter  logger,
-                          UserInfo    userInfo)
+        public CountryBLL(ICountryDAL         countryDal,
+                          UserInfo            userInfo,
+                          ILogger<CountryBLL> logger)
         {
             _countryDal = countryDal;
-            _logger     = logger;
             _userInfo   = userInfo;
-            _logger.Initial(this.GetType().Name);
+            _logger     = logger;
         }
 
         public List<CountryVM> Get()
         {
             var vms = _countryDal.Get()
-                          .Select(c => ToCountryVM(c))
-                          .ToList();
+                                 .Select(c => ToCountryVM(c))
+                                 .ToList();
             return vms;
         }
 
@@ -41,7 +40,7 @@ namespace EntityFrameworkCoreDemo.BLL
             result.Code = entity.Code;
 
             var countryLanguage = entity.CountryLanguages
-                                        .FirstOrDefault(cl=> cl.Language == _userInfo.CurrentLanguage);
+                                        .FirstOrDefault(cl => cl.Language == _userInfo.CurrentLanguage);
             result.Language = _userInfo.CurrentLanguage;
             if (countryLanguage != null)
             {
@@ -97,9 +96,9 @@ namespace EntityFrameworkCoreDemo.BLL
                          };
 
             var item = new CountryLanguage();
-            item.CountryId = countryVm.Id;
-            item.Name = countryVm.Name;
-            item.Language = countryVm.Language ?? _userInfo.CurrentLanguage;
+            item.CountryId         = countryVm.Id;
+            item.Name              = countryVm.Name;
+            item.Language          = countryVm.Language   ?? _userInfo.CurrentLanguage;
             item.CountryLanguageId = countryVm.LanguageId ?? Guid.NewGuid();
             result.CountryLanguages.Add(item);
             return _countryDal.Update(result);

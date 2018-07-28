@@ -3,7 +3,7 @@
  
 ### 環境
  * Target Framework - .NET Core 2.1
- * ASP.NET MVC 5.2.4
+ * ASP.NET Core
  ### 安裝套件
 * Install-Package Microsoft.EntityFrameworkCore
 * Install-Package Microsoft.EntityFrameworkCore.SqlServer
@@ -24,4 +24,5 @@
 
 ## Demo
 
-
+## TODO
+* 加入 Log

@@ -3,27 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using EntityFrameworkCoreDemo.EF;
 using EntityFrameworkCoreDemo.IDAL;
-using EntityFrameworkCoreDemo.Log;
 using EntityFrameworkCoreDemo.Models.EntityModel;
 using EntityFrameworkCoreDemo.Models.Shared;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 
 namespace EntityFrameworkCoreDemo.DAL
 {
     public class CvDAL : ICvDAL, IDisposable
     {
-        private readonly DemoDbContext _dbContext;
-        private readonly LogAdapter    _logger;
-        private          UserInfo      _userInfo;
+        private readonly DemoDbContext  _dbContext;
+        private readonly ILogger<CvDAL> _logger;
+        private          UserInfo       _userInfo;
 
-        public CvDAL(DemoDbContext dbContext,
-                     LogAdapter    logger,
-                     UserInfo      userInfo)
+        public CvDAL(DemoDbContext  dbContext,
+                     ILogger<CvDAL> logger,
+                     UserInfo       userInfo)
         {
             _dbContext = dbContext;
             _logger    = logger;
             _userInfo  = userInfo;
-            _logger.Initial<CountyDAL>();
         }
 
         public IEnumerable<CompCv> Get()
@@ -84,14 +83,9 @@ namespace EntityFrameworkCoreDemo.DAL
 
             _dbContext.CompCv.Update(entity);
 
-            foreach (var certificateEntity in entity.CompCvCertificates)
-                _dbContext.CompCvCertificate.Update(certificateEntity);
-
-            foreach (var educationEntity in entity.CompCvEducations)
-                _dbContext.CompCvEducation.Update(educationEntity);
-
-            foreach (var langReqEntity in entity.CompCvLanguageRequirements)
-                _dbContext.CompCvLanguageRequirement.Update(langReqEntity);
+            _dbContext.CompCvCertificate.AttachRange(entity.CompCvCertificates);
+            _dbContext.CompCvEducation.AttachRange(entity.CompCvEducations);
+            _dbContext.CompCvLanguageRequirement.AttachRange(entity.CompCvLanguageRequirements);
 
             return _dbContext.SaveChanges() > 0;
         }

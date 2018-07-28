@@ -1,24 +1,25 @@
 ﻿using System;
 using EntityFrameworkCoreDemo.IBLL;
-using EntityFrameworkCoreDemo.Log;
 using EntityFrameworkCoreDemo.Models.Shared;
 using EntityFrameworkCoreDemo.Models.ViewModel;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 
 namespace EntityFrameworkCoreDemo.Controllers
 {
     public class CountryController : Controller
     {
-        private readonly ICountryBLL _bll;
-        private readonly LogAdapter  _logAdapter;
-        private readonly UserInfo    _userInfo;
+        private readonly ICountryBLL                _bll;
+        private readonly ILogger<CountryController> _logger;
+        private readonly UserInfo                   _userInfo;
 
-        public CountryController(ICountryBLL bll, LogAdapter logAdapter, UserInfo userInfo)
+        public CountryController(ICountryBLL                bll,
+                                 ILogger<CountryController> logger,
+                                 UserInfo                   userInfo)
         {
-            _userInfo   = userInfo;
-            _bll        = bll;
-            _logAdapter = logAdapter;
-            _logAdapter.Initial(GetType().Name);
+            _userInfo = userInfo;
+            _bll      = bll;
+            _logger   = logger;
         }
 
         public IActionResult Index()

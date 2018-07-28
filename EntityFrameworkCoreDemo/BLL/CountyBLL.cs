@@ -3,38 +3,36 @@ using System.Collections.Generic;
 using System.Linq;
 using EntityFrameworkCoreDemo.IBLL;
 using EntityFrameworkCoreDemo.IDAL;
-using EntityFrameworkCoreDemo.Log;
 using EntityFrameworkCoreDemo.Models.EntityModel;
-using EntityFrameworkCoreDemo.Models.ViewModel;
 using EntityFrameworkCoreDemo.Models.Shared;
 using EntityFrameworkCoreDemo.Models.ViewModel;
+using Microsoft.Extensions.Logging;
 
 namespace EntityFrameworkCoreDemo.BLL
 {
     public class CountyBLL : ICountyBLL
     {
-        private readonly ICountyDAL  _countyDal;
-        private readonly ICountryDAL _countryDal;
-        private readonly LogAdapter  _logger;
-        private readonly UserInfo    _userInfo;
+        private readonly ICountyDAL         _countyDal;
+        private readonly ICountryDAL        _countryDal;
+        private readonly ILogger<CountyBLL> _logger;
+        private readonly UserInfo           _userInfo;
 
-        public CountyBLL(ICountyDAL  countyDal,
-                         ICountryDAL countryDal,
-                         LogAdapter  logger,
-                         UserInfo    userInfo)
+        public CountyBLL(ICountyDAL         countyDal,
+                         ICountryDAL        countryDal,
+                         ILogger<CountyBLL> logger,
+                         UserInfo           userInfo)
         {
             _countyDal  = countyDal;
             _countryDal = countryDal;
             _logger     = logger;
             _userInfo   = userInfo;
-            _logger.Initial(this.GetType().Name);
         }
 
         public List<CountyVM> Get()
         {
             var entities = _countyDal.Get()
-                               .Select(c => ToCountyVM(c))
-                               .ToList();
+                                     .Select(c => ToCountyVM(c))
+                                     .ToList();
             return entities;
         }
 
@@ -44,12 +42,12 @@ namespace EntityFrameworkCoreDemo.BLL
             result.Id = entity.CountyId;
 
             var countyLanguage = entity.CountyLanguages
-                                       ?.FirstOrDefault(cl=>cl.Language == _userInfo.CurrentLanguage);
+                                       ?.FirstOrDefault(cl => cl.Language == _userInfo.CurrentLanguage);
             result.Language = _userInfo.CurrentLanguage;
             if (countyLanguage != null)
-            { 
+            {
                 result.LanguageId = countyLanguage.CountyLanguageId;
-                result.Name = countyLanguage.Name;
+                result.Name       = countyLanguage.Name;
             }
 
             if (entity.Country != null)
@@ -59,7 +57,7 @@ namespace EntityFrameworkCoreDemo.BLL
                                            ?.FirstOrDefault(cl => cl.Language == _userInfo.CurrentLanguage)
                                            ?.Name;
             }
-            
+
             return result;
         }
 
@@ -80,20 +78,20 @@ namespace EntityFrameworkCoreDemo.BLL
         private County ToCountyInsertEntity(CountyVM countyVm)
         {
             County entity;
-            entity = new County();
+            entity          = new County();
             entity.CountyId = Guid.NewGuid();
 
             entity.CountyLanguages = new List<CountyLanguage>
-                                      {
-                                          new CountyLanguage
-                                          {
-                                              CountyLanguageId = Guid.NewGuid(),
-                                              Language         = _userInfo.CurrentLanguage,
-                                              Name             = countyVm.Name,
-                                          }
-                                      };
+                                     {
+                                         new CountyLanguage
+                                         {
+                                             CountyLanguageId = Guid.NewGuid(),
+                                             Language         = _userInfo.CurrentLanguage,
+                                             Name             = countyVm.Name,
+                                         }
+                                     };
 
-            entity.CountryId = countyVm.CountryId ;
+            entity.CountryId = countyVm.CountryId;
 
             return entity;
         }
@@ -101,15 +99,15 @@ namespace EntityFrameworkCoreDemo.BLL
         public bool Update(CountyVM countyVm)
         {
             var result = new County
-            {
-                CountyId = countyVm.Id,
-                CountyLanguages = new List<CountyLanguage>()
-            };
+                         {
+                             CountyId        = countyVm.Id,
+                             CountyLanguages = new List<CountyLanguage>()
+                         };
 
             var item = new CountyLanguage();
-            item.CountyId = countyVm.Id;
-            item.Name = countyVm.Name;
-            item.Language = countyVm.Language ?? _userInfo.CurrentLanguage;
+            item.CountyId         = countyVm.Id;
+            item.Name             = countyVm.Name;
+            item.Language         = countyVm.Language   ?? _userInfo.CurrentLanguage;
             item.CountyLanguageId = countyVm.LanguageId ?? Guid.NewGuid();
             result.CountyLanguages.Add(item);
 
