@@ -20,6 +20,7 @@
 ## Note
 * EF Core 新增 ThenInclude()
 * EF Core 沒有 AddOrUpdate()
-* EF Core 新增 Update()
+* EF Core 新增 Update()、UpdateRange() - 預設 EntityState 為 Modified
+* EF Core 新增 AttachRange() - 預設 EntityState 為 Unchaged
 
 ## Demo
